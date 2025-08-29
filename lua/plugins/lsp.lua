@@ -1,5 +1,66 @@
+-- Prefilled with lsp that have no dependencies
+local servers = { "lua_ls", "rust_analyzer", "denols" }
+
+local function populate_servers()
+	if vim.fn.executable("go") == 1 then
+		table.insert(servers, "gopls")
+	else
+		vim.notify("[mason] Skipping gopls (go not found)", vim.log.levels.WARN)
+	end
+
+	if vim.fn.executable("npm") == 1 then
+		table.insert(servers, "pyright")
+		table.insert(servers, "clangd")
+		table.insert(servers, "bashls")
+	else
+		vim.notify("[mason] Skipping install of some lsp (npm not found)", vim.log.levels.WARN)
+	end
+
+	if vim.fn.executable("cargo") == 1 then
+		table.insert(servers, "nil_ls")
+	else
+		vim.notify("[mason] Skipping nil (cargo not found)", vim.log.levels.WARN)
+	end
+end
+populate_servers()
+
 return {
-	{ "stevearc/aerial.nvim", config = true },
+	{
+		"stevearc/aerial.nvim",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-tree/nvim-web-devicons"
+		},
+		config = true,
+		keys = {
+			{
+				"<leader>ae",
+				function()
+					require("aerial")
+					vim.cmd("AerialToggle")
+				end
+
+			},
+			{
+				"}",
+				function()
+					require("aerial")
+					vim.cmd("AerialNext")
+				end
+
+			},
+			{
+				"{",
+				function()
+					require("aerial")
+					vim.cmd("AerialPrev")
+				end
+
+			},
+
+
+		},
+	},
 	{
 		"nvimdev/lspsaga.nvim",
 		opts = {
@@ -12,36 +73,31 @@ return {
 		},
 	},
 	{
-		"neovim/nvim-lspconfig",
+		"williamboman/mason.nvim",
 		dependencies = {
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
+			"williamboman/mason-lspconfig.nvim"
+		},
+		priority = -10;
+		config = function()
+			require("mason").setup()
 
-			"hrsh7th/nvim-cmp",
+
+			require("mason-lspconfig").setup({
+				ensure_installed = servers,
+				automatic_installation = true,
+			})
+		end,
+
+	},
+	{
+		"hrsh7th/nvim-cmp",
+		dependencies = {
+			"hrsh7th/cmp-path",
+			"saadparwaiz1/cmp_luasnip",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
-			"nvimdev/lspsaga.nvim",
-			"hrsh7th/cmp-path",
-			"L3MON4D3/LuaSnip",
-			"saadparwaiz1/cmp_luasnip",
 		},
 		config = function()
-			local lspconfig = require("lspconfig")
-
-			-- Declarative important have npm and other tools installed
-			local servers = { "gopls", "pyright", "lua_ls", "rust_analyzer", "clangd" }
-
-			-- Custom overwrites for servers
-			local server_settings = {
-				lua_ls = {
-					settings = {
-						Lua = {
-							diagnostics = { globals = { "vim" } },
-						},
-					},
-				},
-			}
-
 			local cmp = require("cmp")
 			cmp.setup({
 				snippet = {
@@ -61,6 +117,28 @@ return {
 					{ name = "path" },
 				}),
 			})
+		end
+	},
+	{
+		"neovim/nvim-lspconfig",
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			"L3MON4D3/LuaSnip",
+		},
+		config = function()
+			local lspconfig = require("lspconfig")
+
+			-- Custom overwrites for servers
+			local server_settings = {
+				lua_ls = {
+					settings = {
+						Lua = {
+							diagnostics = { globals = { "vim" } },
+						},
+					},
+				},
+			}
+
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -93,8 +171,6 @@ return {
 				end, opts)
 			end
 
-
-
 			-- Setup servers manually
 			for _, server in ipairs(servers) do
 				local config = {
@@ -106,13 +182,6 @@ return {
 				end
 				lspconfig[server].setup(config)
 			end
-
-			-- Mason for autoinstall of servers
-			require("mason").setup()
-			require("mason-lspconfig").setup({
-				ensure_installed = servers,
-				automatic_installation = true,
-			})
 
 			-- Add text in diagnostics
 			vim.diagnostic.config({

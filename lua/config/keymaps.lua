@@ -3,8 +3,7 @@
 require("utils.functions")
 require("custom.uni")
 
--- TODO: move this to a config file
-local season = "S3"
+local conf = require("conf")
 
 local links = require("utils.linker")
 local user = vim.fn.system('whoami'):gsub('\n', '')
@@ -23,13 +22,6 @@ end
 --------------------- KEYMAPS -------------------------
 -------------------------------------------------------
 
--- Fast quitter
-vim.keymap.set('n', '<leader>q', function()
-	pcall(function()
-		vim.cmd('wa')
-	end)
-	vim.cmd('qa!')
-end)
 
 -- Fast window switch
 vim.keymap.set("n", "<leader>w", "<C-w>w")
@@ -46,9 +38,6 @@ vim.keymap.set("n", "<leader>me", ":mes<CR>")
 vim.keymap.set("n", "<leader>snt", "<cmd>set nu<CR>")
 vim.keymap.set("n", "<leader>snf", "<cmd>set nonu<CR>")
 
-vim.keymap.set("n", "<leader>nv", function()
-	select_course_directory()
-end, { desc = "Open UniCourse menu" })
 
 vim.keymap.set("n", "n", "nzz", { silent = true })
 vim.keymap.set("n", "N", "Nzz", { silent = true })
@@ -58,26 +47,15 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { silent = true })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { silent = true })
 vim.keymap.set('n', '<leader>a', 'm9ggVG"+y`9')
 vim.keymap.set('n', '<leader>va', 'ggVG')
-
-
-
--- Get a ready to use terminal
 vim.keymap.set('n', '<leader>tr', ':tabnew<CR>:term<CR>i')
 
--- This needs to be refined for quick access to a new file or a recently edited one
-vim.keymap.set('n', '<leader>ov',
-	function()
-		local uni_dir = vim.fn.expand("~/projects/university/" .. season)
+-- Indent all will be replaced by the formatting of lsp where the lsp is installed
+vim.keymap.set('n', '<leader>ia', 'gg=G<C-o>zz')
 
-		require('telescope.builtin').find_files {
-			prompt_title = "Select Vorlesung in " .. season,
-			cwd = uni_dir,
-			find_command = {
-				"eza", "-1", "-D"
-			},
-		}
-	end
-)
+vim.keymap.set('n', '<leader>ya', 'ggVG"+y<C-o>')
+
+vim.keymap.set('n', '<leader>ss', ':wa<CR>')
+
 -- new quick note file
 -- TODO: make this smarter
 vim.keymap.set("n", "<leader>nn", ":e ~/synced/brainstore/zettelkasten/quick<CR>", { silent = true })
@@ -119,30 +97,9 @@ vim.keymap.set('n', '<leader>oho', ':e ~/configuration/nixos/hosts<CR>')
 vim.keymap.set('n', '<leader>os', ':e ~/configuration/nixos/modules/server<CR>')
 vim.keymap.set('n', '<leader>ot', ':e ~/synced/brainstore/todos/todo.txt<CR>`.zz')
 vim.keymap.set('n', '<leader>od', ':e ~/synced/brainstore/todos/done.txt<CR>`.zz')
-vim.keymap.set('n', '<leader>ou', ':e ~/projects/university/' .. season .. '/input.txt<CR>`.zz')
+vim.keymap.set('n', '<leader>ou', ':e ~/projects/university/' .. conf.season .. '/input.txt<CR>`.zz')
 vim.keymap.set('n', '<leader>oz', ':e ~/.zshrc<CR>`.zz')
 vim.keymap.set('n', '<leader>oaa', ':e ~/.common_shell<CR>`.zz')
-vim.keymap.set("n", "<leader>or",
-	function()
-		local last_file_path = vim.fn.stdpath('data') .. "/lastfile.txt"
-		local file = io.open(last_file_path, "r")
-		if file then
-			local last_file = file:read("*line")
-			file:close()
-			if last_file and vim.fn.filereadable(last_file) == 1 then
-				vim.cmd("edit " .. last_file)
-				pcall(function()
-					vim.cmd('normal! `.') -- Go to the last edit position
-					vim.cmd('normal! zz') -- Center the cursor on the screen
-				end)
-			else
-				print("Last file does not exist or is not readable")
-			end
-		else
-			print("No last file found")
-		end
-	end
-	, { noremap = true, silent = true })
 
 
 vim.keymap.set('n', '<leader>ok', open_cal)
@@ -156,12 +113,6 @@ vim.keymap.set("n", "<leader>lc", links.insert_contact_link, { desc = "Link Cont
 vim.keymap.set("n", "<leader>ld", links.insert_date_link, { desc = "Link Contact" })
 
 
--- Indent all will be replaced by the formatting of lsp where the lsp is installed
-vim.keymap.set('n', '<leader>ia', 'gg=G<C-o>zz')
-
-vim.keymap.set('n', '<leader>ya', 'ggVG"+y<C-o>')
-
-vim.keymap.set('n', '<leader>ss', ':wa<CR>')
 vim.keymap.set('n', '<leader>sw', function()
 	local word = vim.fn.expand("<cword>")
 	local replacement = vim.fn.input("Replace '" .. word .. "' with: ")
@@ -196,25 +147,23 @@ end, { desc = "Substitute selection in file" })
 vim.keymap.set('n', '<leader>pp', function()
 	vim.api.nvim_command('normal! "+p')
 end, { desc = 'Paste from system clipboard' })
-
 vim.keymap.set('v', '<leader>p', function()
 	vim.cmd('normal! "+p')
 end, { desc = 'Yank to clipboard and keep the selection' })
-
------------------------- VISUAL ------------------
+vim.keymap.set("n", "<leader>nv", function()
+	select_course_directory()
+end, { desc = "Open UniCourse menu" })
 
 vim.keymap.set('v', 'p', function()
 	local unnamed_content = vim.fn.getreg('""')
 	vim.api.nvim_command('normal! p')
 	vim.fn.setreg('""', unnamed_content)
 end, { desc = 'Paste from unnamed register (don\'t overwrite it) in visual mode' })
+
 vim.keymap.set('v', '<leader>y', function()
 	vim.cmd('normal! "+y')
 	vim.cmd('normal! gv')
 end, { desc = 'Yank to clipboard and keep the selection' })
-
-
----------------------------- INSERT ---------------------------
 
 vim.keymap.set('i', '<C-k>', function()
 	local col = vim.fn.col('.')
@@ -228,6 +177,7 @@ vim.keymap.set('i', '<C-k>', function()
 		end
 	end
 end)
+
 -- Move left with wrapping
 vim.keymap.set('i', '<C-j>', function()
 	local col = vim.fn.col('.')
@@ -242,3 +192,46 @@ vim.keymap.set('i', '<C-j>', function()
 		end
 	end
 end, { noremap = true, silent = true })
+
+vim.keymap.set("n", "<leader>or",
+	function()
+		local last_file_path = vim.fn.stdpath('data') .. "/lastfile.txt"
+		local file = io.open(last_file_path, "r")
+		if file then
+			local last_file = file:read("*line")
+			file:close()
+			if last_file and vim.fn.filereadable(last_file) == 1 then
+				vim.cmd("edit " .. last_file)
+				pcall(function()
+					vim.cmd('normal! `.') -- Go to the last edit position
+					vim.cmd('normal! zz') -- Center the cursor on the screen
+				end)
+			else
+				print("Last file does not exist or is not readable")
+			end
+		else
+			print("No last file found")
+		end
+	end
+	, { noremap = true, silent = true })
+
+-- Fast quitter
+vim.keymap.set('n', '<leader>q', function()
+	pcall(function()
+		vim.cmd('wa')
+	end)
+	vim.cmd('qa!')
+end)
+
+-- This needs to be refined for quick access to a new file or a recently edited one
+vim.keymap.set('n', '<leader>ov',
+	function()
+		require('telescope.builtin').find_files({
+			prompt_title = "Select lecture in " .. conf.season,
+			cwd = conf.uni_dir,
+			find_command = {
+				"eza", "-1", "-D"
+			}
+		})
+	end
+)

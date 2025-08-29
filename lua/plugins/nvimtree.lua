@@ -1,5 +1,11 @@
 return {
 	"nvim-tree/nvim-tree.lua",
+	keys = {
+		{ "<leader>e", function()
+			require("nvim-tree.api").tree.toggle({ find_file = true, update_root = true, focus = true, })
+		end
+		}
+	},
 	opts = {
 		sort_by = "case_sensitive",
 

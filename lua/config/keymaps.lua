@@ -3,12 +3,11 @@
 require("utils.functions")
 require("custom.uni")
 
-local season = "S2"
+-- TODO: move this to a config file
+local season = "S3"
 
 local links = require("utils.linker")
 local user = vim.fn.system('whoami'):gsub('\n', '')
-local api = require("nvim-tree.api")
-local builtin = require('telescope.builtin')
 
 local function open_cal()
 	local current_date = os.date("%Y-%m-%d")
@@ -37,66 +36,67 @@ vim.keymap.set("n", "<leader>w", "<C-w>w")
 
 --------------------- NORMAL -------------------------
 
-vim.keymap.set("n", "L", ":BufferNext<CR>", { silent = true })
-vim.keymap.set("n", "n", "nzz", { silent = true })
-vim.keymap.set("n", "N", "Nzz", { silent = true })
-vim.keymap.set("n", "H", ":BufferPrevious<CR>", { silent = true })
-vim.keymap.set("n", "<C-o>", "<C-o>zz", { silent = true })
-vim.keymap.set("n", "<C-i>", "<C-i>zz", { silent = true })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { silent = true })
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { silent = true })
 
-vim.keymap.set('n', '<leader>a', 'm9ggVG"+y`9')
-vim.keymap.set('n', '<leader>va', 'ggVG')
-
--- Launch panel if nothing is typed after <leader>z
-vim.keymap.set("n", "<leader>z", "<cmd>Telekasten panel<CR>")
-
--- Most used functions
-vim.keymap.set("n", "<leader>zf", "<cmd>Telekasten find_notes<CR>")
-vim.keymap.set("n", "<leader>zg", "<cmd>Telekasten search_notes<CR>")
 vim.keymap.set('n', '<leader>zq', ':e ~/synced/brainstore/zettelkasten/input.txt<CR>`.zz')
-vim.keymap.set("n", "<leader>zd", "<cmd>Telekasten goto_today<CR>")
-vim.keymap.set("n", "<leader>zr", "<cmd>Telekasten rename_note<CR>")
-vim.keymap.set("n", "<leader>zz", "<cmd>Telekasten follow_link<CR>")
-vim.keymap.set("n", "<leader>zn", "<cmd>Telekasten new_note<CR>")
-vim.keymap.set("n", "<leader>zb", "<cmd>Telekasten show_backlinks<CR>")
-vim.keymap.set("n", "<leader>zw", "<cmd>Telekasten find_weekly_notes<CR>")
-vim.keymap.set("n", "<leader>zI", "<cmd>Telekasten insert_img_link<CR>")
+
+-- Buildin vim
 
 vim.keymap.set("n", "<leader>me", ":mes<CR>")
-vim.keymap.set("n", "<C-/>", ":ToggleTerm<CR>")
-vim.keymap.set("t", "<C-/>", "<C-\\><C-n>:ToggleTerm<CR>")
 
 vim.keymap.set("n", "<leader>snt", "<cmd>set nu<CR>")
 vim.keymap.set("n", "<leader>snf", "<cmd>set nonu<CR>")
-
--- Call insert link automatically when we start typing a link
-vim.keymap.set("n", "<leader>il", "<cmd>Telekasten insert_link<CR>")
 
 vim.keymap.set("n", "<leader>nv", function()
 	select_course_directory()
 end, { desc = "Open UniCourse menu" })
 
+vim.keymap.set("n", "n", "nzz", { silent = true })
+vim.keymap.set("n", "N", "Nzz", { silent = true })
+vim.keymap.set("n", "<C-o>", "<C-o>zz", { silent = true })
+vim.keymap.set("n", "<C-i>", "<C-i>zz", { silent = true })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { silent = true })
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { silent = true })
+vim.keymap.set('n', '<leader>a', 'm9ggVG"+y`9')
+vim.keymap.set('n', '<leader>va', 'ggVG')
 
-vim.keymap.set('n', '<leader>ca', 'ggVGd')
-vim.keymap.set("n", "<leader>bd", ":BufferDelete<CR>", { silent = true })
 
--- Typstar stuff
-vim.keymap.set("n", "<leader>ti", ":TypstarInsertRnote<CR>", { silent = true })
-vim.keymap.set("n", "<leader>to", ":TypstarOpenDrawing<CR>", { silent = true })
 
 -- Get a ready to use terminal
 vim.keymap.set('n', '<leader>tr', ':tabnew<CR>:term<CR>i')
-vim.keymap.set("n", "<leader>tt", ":Telescope<CR>", { desc = "Follow Link" })
 
 -- This needs to be refined for quick access to a new file or a recently edited one
-vim.keymap.set('n', '<leader>ov', open_vorlesung)
+vim.keymap.set('n', '<leader>ov',
+	function()
+		local uni_dir = vim.fn.expand("~/projects/university/" .. season)
+
+		require('telescope.builtin').find_files {
+			prompt_title = "Select Vorlesung in " .. season,
+			cwd = uni_dir,
+			find_command = {
+				"eza", "-1", "-D"
+			},
+		}
+	end
+)
 -- new quick note file
 -- TODO: make this smarter
 vim.keymap.set("n", "<leader>nn", ":e ~/synced/brainstore/zettelkasten/quick<CR>", { silent = true })
 
-vim.keymap.set("n", "<leader>r", set_root)
+vim.keymap.set("n", "<leader>r",
+	function()
+		local current_file = vim.fn.expand('%:p:h') -- get directory of current file
+		local cmd = 'git -C ' .. vim.fn.fnameescape(current_file) .. ' status'
+		vim.fn.system(cmd)
+		if vim.v.shell_error == 0 then
+			local git_root = vim.fn.systemlist('git -C ' ..
+					vim.fn.fnameescape(current_file) .. ' rev-parse --show-toplevel')
+				[1]
+			vim.cmd('cd ' .. vim.fn.fnameescape(git_root))
+		else
+			vim.cmd('cd ' .. vim.fn.fnameescape(current_file))
+		end
+	end
+)
 
 -- Quickly open some buffers
 vim.keymap.set('n', '<leader>occ', ':e ~/.config/nvim/init.lua<CR>`.zz')
@@ -106,7 +106,7 @@ vim.keymap.set('n', '<leader>ocd', ':e ~/.config/nvim/lua/config/autocmds.lua<CR
 vim.keymap.set('n', '<leader>oco', ':e ~/.config/nvim/lua/config/options.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>ocl', ':e ~/.config/nvim/lua/config/lazy.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oczl', ':e ~/.config/nvim/lua/config/lsp.lua<CR>`.zz')
-vim.keymap.set('n', '<leader>ocp', ':e ~/.config/nvim/lua/plugins/main.lua<CR>`.zz')
+vim.keymap.set('n', '<leader>ocp', ':e ~/.config/nvim/lua/plugins/misc.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>ocf', ':e ~/.config/nvim/lua/utils/functions.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oca', ':e ~/.config/nvim/lua/utils/after.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oq', ':e ~/synced/brainstore/input.txt<CR>`.zz')
@@ -122,7 +122,27 @@ vim.keymap.set('n', '<leader>od', ':e ~/synced/brainstore/todos/done.txt<CR>`.zz
 vim.keymap.set('n', '<leader>ou', ':e ~/projects/university/' .. season .. '/input.txt<CR>`.zz')
 vim.keymap.set('n', '<leader>oz', ':e ~/.zshrc<CR>`.zz')
 vim.keymap.set('n', '<leader>oaa', ':e ~/.common_shell<CR>`.zz')
-vim.keymap.set("n", "<leader>or", "<cmd>lua open_last_file()<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>or",
+	function()
+		local last_file_path = vim.fn.stdpath('data') .. "/lastfile.txt"
+		local file = io.open(last_file_path, "r")
+		if file then
+			local last_file = file:read("*line")
+			file:close()
+			if last_file and vim.fn.filereadable(last_file) == 1 then
+				vim.cmd("edit " .. last_file)
+				pcall(function()
+					vim.cmd('normal! `.') -- Go to the last edit position
+					vim.cmd('normal! zz') -- Center the cursor on the screen
+				end)
+			else
+				print("Last file does not exist or is not readable")
+			end
+		else
+			print("No last file found")
+		end
+	end
+	, { noremap = true, silent = true })
 
 
 vim.keymap.set('n', '<leader>ok', open_cal)
@@ -135,12 +155,10 @@ vim.keymap.set("n", "<leader>lp", links.insert_project_link, { desc = "Link Proj
 vim.keymap.set("n", "<leader>lc", links.insert_contact_link, { desc = "Link Contact" })
 vim.keymap.set("n", "<leader>ld", links.insert_date_link, { desc = "Link Contact" })
 
--- Nvim tree
-vim.keymap.set("n", "<leader>e", function()
-	api.tree.toggle({ find_file = true, update_root = true, focus = true, })
-end, { silent = true }) -- also update the root with the bang
 
+-- Indent all will be replaced by the formatting of lsp where the lsp is installed
 vim.keymap.set('n', '<leader>ia', 'gg=G<C-o>zz')
+
 vim.keymap.set('n', '<leader>ya', 'ggVG"+y<C-o>')
 
 vim.keymap.set('n', '<leader>ss', ':wa<CR>')
@@ -151,6 +169,8 @@ vim.keymap.set('n', '<leader>sw', function()
 		vim.cmd(string.format("%%s/\\<%s\\>/%s/gI", vim.fn.escape(word, '\\/'), vim.fn.escape(replacement, '\\/')))
 	end
 end, { desc = "Substitute word under cursor (prompt)" })
+
+-- Substitution in visual mode
 vim.keymap.set('v', '<leader>sv', function()
 	-- Save the current selection
 	local save_reg = vim.fn.getreg('"')
@@ -180,29 +200,6 @@ end, { desc = 'Paste from system clipboard' })
 vim.keymap.set('v', '<leader>p', function()
 	vim.cmd('normal! "+p')
 end, { desc = 'Yank to clipboard and keep the selection' })
-
-vim.keymap.set('n', '<leader>fr', function()
-	require('telescope.builtin').oldfiles({
-		disable_devicons = true,
-	})
-end, { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
-vim.keymap.set("n", "<leader>fl", links.follow_link, { desc = "Follow Link" })
-
-
-vim.keymap.set('n', '<leader>g', function()
-	require('telescope.builtin').live_grep({
-		disable_devicons = true,
-		cwd = vim.fn.getcwd(),                -- set the starting directory
-		additional_args = function()
-			return { '--hidden', '--glob', '!.git/*' } -- include hidden files but exclude .git
-		end,
-	})
-end, { noremap = true, silent = true })
-
-vim.keymap.set('n', '<leader><leader>', find_eff,
-	{ desc = 'Telescope find files (with dotfiles and folders but excluding .git, .cache, .local, and large files)' })
 
 ------------------------ VISUAL ------------------
 

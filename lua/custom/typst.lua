@@ -1,30 +1,21 @@
+local M = {}
+
 local functions = require("utils.functions")
+
 local watch_job_id = nil
 local watch_buf_id = nil
+local watch_tab_id = nil
 
-local function watch_and_open()
+function M.Watch_and_open()
+	-- Parse the current file and check for typst
+	vim.notify("INIT", vim.log.levels.WARN)
 	local input = vim.fn.expand("%:p")
 	if not input:match("%.typ$") then
 		vim.notify("Not a Typst file", vim.log.levels.WARN)
 		return
 	end
-
 	local dir = vim.fn.fnamemodify(input, ":h")    -- directory of the Typst file
 	local filename = vim.fn.expand("%:t:r") .. ".pdf" -- filename without extension + .pdf
-
-	-- Get the underlying unicourse dir
-	local one_up = vim.fn.fnamemodify(dir, ":h")
-
-	print(one_up)
-	local pdf_dir = nil
-	if vim.fn.filereadable(one_up .. "/.unicourse") == 1 then
-		pdf_dir = one_up .. "/../../pdfs"
-	else
-		pdf_dir = dir
-	end
-
-	vim.fn.mkdir(pdf_dir, "p")
-	local output = pdf_dir .. "/" .. filename
 
 	-- Check if a watcher is already running for this file
 	if watch_job_id then
@@ -32,10 +23,11 @@ local function watch_and_open()
 		return
 	end
 
-
+	local output = dir .. "/" .. filename
 
 	-- Start typst watch
 	local cwd = vim.fn.getcwd() -- set the starting directory
+
 	-- TODO: root setting does not work
 	local watch_cmd = { "typst", "watch", "--root", cwd, input, output }
 	watch_job_id = vim.fn.jobstart(watch_cmd, {
@@ -44,7 +36,7 @@ local function watch_and_open()
 		on_stderr = function(_, data)
 			if data then
 				if not watch_tab_id then
-					pre_tab = vim.api.nvim_get_current_tabpage() -- Get the current tab ID
+					local pre_tab = vim.api.nvim_get_current_tabpage() -- Get the current tab ID
 					vim.cmd('tabnew')                  -- Open a new tab
 					watch_tab_id = vim.api.nvim_get_current_tabpage() -- Get the current tab ID
 					watch_buf_id = vim.api.nvim_get_current_buf() -- Get the buffer ID of the new tab
@@ -63,12 +55,6 @@ local function watch_and_open()
 			end
 		end,
 		on_exit = function(_, exit_code)
-			-- Ensure to close the tab that holds the logs
-			--if watch_tab_id then
-			--	-- Switch to the tab holding the log buffer and close it
-			--	vim.api.nvim_set_current_tabpage(watch_tab_id)
-			--	vim.cmd('tabclose')  -- Close the tab holding the log buffer
-			--end
 			if exit_code == 0 then
 				vim.notify("Typst watch stopped successfully", vim.log.levels.INFO)
 			else
@@ -79,8 +65,6 @@ local function watch_and_open()
 	})
 	vim.notify("Started Typst watch", vim.log.levels.INFO)
 
-	-- Start sioyek with the --new-window flag and stop watch when it exits
-	-- ensure that there is no sioyek
 	vim.fn.system("killall .zathura-wrapped")
 	functions.Sleep(0.5)
 	vim.fn.jobstart({ "zathura", output }, {
@@ -93,6 +77,4 @@ local function watch_and_open()
 	})
 end
 
-return {
-	Watch_and_open = watch_and_open
-}
+return M

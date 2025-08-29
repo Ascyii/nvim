@@ -23,6 +23,14 @@ return {
 				"<Cmd>TypstarSmartJumpBack<CR>",
 				mode = { "s", "i" },
 			},
+			{
+				"<leader>ti",
+				":TypstarInsertRnote<CR>",
+			},
+			{
+				"<leader>to",
+				":TypstarOpenDrawing<CR>",
+			},
 		},
 		config = function()
 			local typstar = require("typstar")

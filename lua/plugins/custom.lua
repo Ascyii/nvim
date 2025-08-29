@@ -1,14 +1,15 @@
--- Custom modules
-
---- @param name string
+--- @param name? string
 --- @return string
-local function get_dir(name)
+local function get_custom_dir(name)
+	if name == nil then
+		return vim.fn.stdpath("config") .. "/lua/custom"
+	end
 	return vim.fn.stdpath("config") .. "/lua/custom/" .. name
 end
 
 return {
 	{
-		dir = get_dir("todo"),
+		dir = get_custom_dir("todo"),
 		name = "todo",
 		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
 		config = function()
@@ -16,7 +17,7 @@ return {
 		end,
 	},
 	{
-		dir = vim.fn.stdpath("config") .. "/lua/custom", -- folder containing typst.lua
+		dir = get_custom_dir(),
 		name = "typst",
 		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
 		keys = {

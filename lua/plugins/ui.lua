@@ -63,8 +63,6 @@ return {
 			'lewis6991/gitsigns.nvim',
 			'nvim-tree/nvim-web-devicons',
 		},
-		init = function() vim.g.barbar_auto_setup = false end,
-		cmd = { "BufferNext", "BufferPrevious" },
 		opts = {
 			clickable = false,
 			tabpages = false,
@@ -72,5 +70,11 @@ return {
 			icons = { filetype = { enabled = false } }
 		},
 		version = '^1.0.0', -- only update when a new 1.x version is released
+		config = function()
+			vim.keymap.set("n", "L", ":BufferNext<CR>", { silent = true })
+			vim.keymap.set("n", "H", ":BufferPrevious<CR>", { silent = true })
+
+			vim.keymap.set("n", "<leader>bd", ":BufferDelete<CR>")
+		end
 	},
 }

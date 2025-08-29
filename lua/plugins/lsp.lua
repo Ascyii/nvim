@@ -1,5 +1,5 @@
 return {
-	{ "stevearc/aerial.nvim", opts = {} },
+	{ "stevearc/aerial.nvim", config = true },
 	{
 		"nvimdev/lspsaga.nvim",
 		opts = {

@@ -5,6 +5,18 @@ function M.sleep(n)
 	os.execute("sleep " .. tonumber(n))
 end
 
+--- @return string
+function M.get_cwd()
+	local cwd = vim.fn.getcwd()
+	local home = os.getenv("HOME")
+
+	if cwd:sub(1, #home) == home then
+		return "~" .. cwd:sub(#home + 1)
+	else
+		return cwd
+	end
+end
+
 --- @return {}
 function M.get_lsp_servers()
 	local servers = { "lua_ls" }

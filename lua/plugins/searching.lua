@@ -57,7 +57,7 @@ return {
 						no_ignore = true, -- Also show files in gitignore
 						follow = true,
 						disable_devicons = true,
-						prompt_title = "Find Files - custom",
+						prompt_title = "Find Files",
 						find_command = {
 							"rg", "--files",
 							"--glob", "!**/.git/*",

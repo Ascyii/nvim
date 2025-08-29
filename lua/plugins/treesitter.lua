@@ -10,6 +10,7 @@ return {
 				ensure_installed = { "typst", "go", "bash", "python", "nix", "lua" },
 				highlight = { enable = true },
 				indent = { enable = true },
+				fold = { enable = true },
 			})
 		end
 	},

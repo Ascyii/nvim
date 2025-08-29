@@ -1,4 +1,3 @@
-local base_zet = "~/synced/brainstore/zettelkasten"
 
 return {
 	{
@@ -43,6 +42,8 @@ return {
 		'Ascyii/telekasten.nvim',
 		dev = true,
 		config = function()
+			local base_zet = "~/synced/brainstore/zettelkasten"
+
 			-- Again can only use opts when not using config
 			require("telekasten").setup({
 				home = vim.fn.expand(base_zet),
@@ -61,6 +62,7 @@ return {
 				uuid_separator = "-",
 			})
 
+			-- Telekasten occupies the z namespace
 			vim.keymap.set("n", "<leader>z", "<cmd>Telekasten panel<CR>")
 			vim.keymap.set("n", "<leader>zf", "<cmd>Telekasten find_notes<CR>")
 			vim.keymap.set("n", "<leader>zg", "<cmd>Telekasten search_notes<CR>")

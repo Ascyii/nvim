@@ -33,6 +33,20 @@ vim.keymap.set('n', '<leader>ya', 'ggVG"+y<C-o>')
 vim.keymap.set('n', '<leader>ss', ':wa<CR>')
 vim.keymap.set("n", "<leader>nn", ":e ~/synced/brainstore/zettelkasten/quick<CR>", { silent = true })
 
+-- Folding
+local opts = { noremap = true, silent = true }
+local is_all_folded = false
+local function toggle_fold()
+	if is_all_folded then
+		vim.opt.foldlevel = 99
+	else
+		vim.opt.foldlevel = 0
+	end
+	is_all_folded = not is_all_folded
+end
+vim.api.nvim_set_keymap("n", "<leader>ft", "za", opts)      -- toggle fold under cursor
+vim.keymap.set("n", "<leader>fs", toggle_fold, opts)  -- close all folds
+
 -- Quickly open some buffers
 vim.keymap.set('n', '<leader>occ', ':e ~/.config/nvim/init.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oct', ':e ~/synced/vault/contacts/contacts.txt<CR>`.zz')

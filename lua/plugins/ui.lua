@@ -1,14 +1,4 @@
---- @return string
-local function get_cwd()
-	local cwd = vim.fn.getcwd()
-	local home = os.getenv("HOME")
-
-	if cwd:sub(1, #home) == home then
-		return "~" .. cwd:sub(#home + 1)
-	else
-		return cwd
-	end
-end
+local utils = require("utils.functions")
 
 return {
 	{
@@ -21,15 +11,17 @@ return {
 	},
 	{
 		'nvim-lualine/lualine.nvim',
-		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		dependencies = {
+			'nvim-tree/nvim-web-devicons'
+		},
 		opts = {
 			options = {
-				icons_enabled = false,
+				icons_enabled = true,
 				theme = 'gruvbox',
 				component_separators = { left = '', right = '' },
 				section_separators = { left = '', right = '' },
 				always_divide_middle = true,
-				always_show_tabline = true,
+				always_show_tabline = false,
 				globalstatus = false,
 				refresh = {
 					statusline = 300,
@@ -40,21 +32,12 @@ return {
 			sections = {
 				lualine_a = { 'mode' },
 				lualine_b = { 'branch', 'diff', 'diagnostics' },
-				lualine_c = { get_cwd, 'filename' },
+				lualine_c = { utils.get_cwd(), 'filename' },
 				lualine_x = { 'encoding', 'fileformat', 'filetype' },
 				lualine_y = { 'progress' },
 				lualine_z = { 'location' }
 			},
-			inactive_sections = {
-				lualine_a = {},
-				lualine_b = {},
-				lualine_c = { 'filename' },
-				lualine_x = { 'location' },
-				lualine_y = {},
-				lualine_z = {}
-			},
-			extensions = { "nvim-tree" }
-
+			extensions = { "nvim-tree" } -- show another line on the tree
 		}
 	},
 	{

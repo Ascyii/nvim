@@ -1,6 +1,3 @@
--- custom module for todo file editing support in neovim
--- inspired by a older plugin that does basically the same
-
 local M = {}
 
 local function is_todo_file()
@@ -21,7 +18,6 @@ function M.remove_priority()
 	line = line:gsub("^%(%u%)%s*", "")
 	vim.api.nvim_set_current_line(line)
 end
-
 
 function M.mark_done()
 	if not is_todo_file() then return end
@@ -103,22 +99,5 @@ function M.sort_by_project()
 	grouped_sort(get_project_key)
 end
 
-function M.setup()
-	local opts = { noremap = true, silent = true }
-
-	for i = string.byte("a"), string.byte("z") do
-		local letter = string.char(i)
-		vim.keymap.set("n", "<leader>p" .. letter, function() M.set_priority(letter) end, opts)
-	end
-
-	vim.keymap.set("n", "<leader>p<leader>", M.remove_priority, opts)
-
-	vim.keymap.set("n", "<leader>sp", M.sort_by_priority, opts)
-	vim.keymap.set("n", "<leader>sc", M.sort_by_context, opts)
-	vim.keymap.set("n", "<leader>sr", M.sort_by_project, opts)
-
-	-- New keymap for marking todo as done
-	vim.keymap.set("n", "<leader>td", M.mark_done, opts)
-end
 
 return M

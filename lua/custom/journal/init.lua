@@ -1,7 +1,6 @@
 local M = {}
 
-local journal_base_raw = "~/management/brainstore/knowledge/journal"
-local journal_base = vim.fn.expand(journal_base_raw)
+local journal_base = vim.fn.expand("~/management/brainstore/knowledge/journal")
 
 M.open_today = function()
 	local date = os.date("*t")

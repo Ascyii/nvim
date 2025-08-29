@@ -1,9 +1,11 @@
+local M = {}
+
 local fzf = require("fzf-lua")
 local fn = vim.fn
-local current_season = "S3"
+local conf = require("conf")
 
 -- Function to scan for .unicourse files and get their course directories
-function get_course_directories()
+function M.get_course_directories()
 	local dirs = {}
 	local function scan_dir(dir)
 		for _, entry in ipairs(fn.glob(dir .. "/*", true, true)) do
@@ -26,13 +28,13 @@ function get_course_directories()
 		end
 	end
 
-	scan_dir("~/projects/university/" .. current_season)
+	scan_dir("~/projects/university/" .. conf.season)
 	return dirs
 end
 
 -- Function to show the fzf menu for selecting a course directory
-function select_course_directory()
-	local courses = get_course_directories()
+function M.select_course_directory()
+	local courses = M.get_course_directories()
 	local course_names = {}
 
 	for _, course in ipairs(courses) do
@@ -45,7 +47,7 @@ function select_course_directory()
 			["default"] = function(selected)
 				for _, course in ipairs(courses) do
 					if selected[1] == (course.name .. " (" .. course.short .. ")") then
-						show_course_menu(course)
+						M.show_course_menu(course)
 						break
 					end
 				end
@@ -55,7 +57,7 @@ function select_course_directory()
 end
 
 -- Function to show the fzf menu for actions on a selected course folder
-function show_course_menu(course)
+function M.show_course_menu(course)
 	local files = {}
 	-- Collect all VL files in the Vorlesungen directory
 	for _, file in ipairs(fn.glob(course.path .. "/VL/*", true, true)) do
@@ -79,10 +81,10 @@ function show_course_menu(course)
 		actions = {
 			["default"] = function(selected)
 				if selected[1] == "Open the newest VL file" then
-					local newest_file = get_newest_vl_file(files)
+					local newest_file = M.get_newest_vl_file(files)
 					vim.cmd("edit " .. newest_file)
 				elseif selected[1] == "Create a new VL" then
-					create_new_vl(course)
+					M.create_new_vl(course)
 				elseif selected[1] == "Open the course folder" then
 					vim.cmd("edit " .. course.path)
 				elseif selected[1] == "Open a specific file" then
@@ -101,7 +103,7 @@ function show_course_menu(course)
 end
 
 -- Function to get the newest VL file based on modification time
-function get_newest_vl_file(files)
+function M.get_newest_vl_file(files)
 	local newest_file = nil
 	local newest_time = 0
 	for _, file in ipairs(files) do
@@ -115,18 +117,20 @@ function get_newest_vl_file(files)
 end
 
 -- Function to create a new VL file based on the template and incrementing the number
-function create_new_vl(course)
+function M.create_new_vl(course)
 	local vl_dir = course.path .. "/VL"
-	local success, _ = pcall(function()
+	pcall(function()
 		vim.fn.mkdir(vl_dir)
 	end)
 	-- Hard coded this
 	local template_path = vim.fn.expand("~/projects/university/data/template.typ")
 	if fn.filereadable(template_path) == 1 then
 		-- Find the latest VL number in the folder
+		--- @type number?
 		local latest_num = 0
 		for _, file in ipairs(fn.glob(vl_dir .. "/*", true, true)) do
 			if file:match(course.short .. "VL(%d+).typ$") then
+				--- @type number?
 				local num = tonumber(file:match(course.short .. "VL(%d+).typ$"))
 				if num > latest_num then
 					latest_num = num
@@ -147,3 +151,5 @@ function create_new_vl(course)
 		print("Template file (template.typ) not found!")
 	end
 end
+
+return M

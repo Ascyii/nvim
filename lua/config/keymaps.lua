@@ -1,43 +1,21 @@
 -- Custom keymaps
 
 require("utils.functions")
-require("custom.uni")
 
 local conf = require("conf")
-
-local links = require("utils.linker")
-local user = vim.fn.system('whoami'):gsub('\n', '')
-
-local function open_cal()
-	local current_date = os.date("%Y-%m-%d")
-	local week_number = os.date("%V")
-	local day_of_week = os.date("%a")
-	local path = "~/synced/brainstore/calendar/calendar_" .. os.date("%Y") .. ".txt"
-	local keys = ":e " ..
-		path .. "<CR>/" .. current_date .. " w" .. tonumber(week_number) .. " " .. day_of_week .. "<CR>$"
-	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), 'n', true)
-end
 
 -------------------------------------------------------
 --------------------- KEYMAPS -------------------------
 -------------------------------------------------------
 
-
 -- Fast window switch
 vim.keymap.set("n", "<leader>w", "<C-w>w")
 
---------------------- NORMAL -------------------------
-
-
 vim.keymap.set('n', '<leader>zq', ':e ~/synced/brainstore/zettelkasten/input.txt<CR>`.zz')
-
--- Buildin vim
-
 vim.keymap.set("n", "<leader>me", ":mes<CR>")
 
 vim.keymap.set("n", "<leader>snt", "<cmd>set nu<CR>")
 vim.keymap.set("n", "<leader>snf", "<cmd>set nonu<CR>")
-
 
 vim.keymap.set("n", "n", "nzz", { silent = true })
 vim.keymap.set("n", "N", "Nzz", { silent = true })
@@ -51,30 +29,9 @@ vim.keymap.set('n', '<leader>tr', ':tabnew<CR>:term<CR>i')
 
 -- Indent all will be replaced by the formatting of lsp where the lsp is installed
 vim.keymap.set('n', '<leader>ia', 'gg=G<C-o>zz')
-
 vim.keymap.set('n', '<leader>ya', 'ggVG"+y<C-o>')
-
 vim.keymap.set('n', '<leader>ss', ':wa<CR>')
-
--- new quick note file
--- TODO: make this smarter
 vim.keymap.set("n", "<leader>nn", ":e ~/synced/brainstore/zettelkasten/quick<CR>", { silent = true })
-
-vim.keymap.set("n", "<leader>r",
-	function()
-		local current_file = vim.fn.expand('%:p:h') -- get directory of current file
-		local cmd = 'git -C ' .. vim.fn.fnameescape(current_file) .. ' status'
-		vim.fn.system(cmd)
-		if vim.v.shell_error == 0 then
-			local git_root = vim.fn.systemlist('git -C ' ..
-					vim.fn.fnameescape(current_file) .. ' rev-parse --show-toplevel')
-				[1]
-			vim.cmd('cd ' .. vim.fn.fnameescape(git_root))
-		else
-			vim.cmd('cd ' .. vim.fn.fnameescape(current_file))
-		end
-	end
-)
 
 -- Quickly open some buffers
 vim.keymap.set('n', '<leader>occ', ':e ~/.config/nvim/init.lua<CR>`.zz')
@@ -88,8 +45,8 @@ vim.keymap.set('n', '<leader>ocp', ':e ~/.config/nvim/lua/plugins/misc.lua<CR>`.
 vim.keymap.set('n', '<leader>ocf', ':e ~/.config/nvim/lua/utils/functions.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oca', ':e ~/.config/nvim/lua/utils/after.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oq', ':e ~/synced/brainstore/input.txt<CR>`.zz')
-vim.keymap.set('n', '<leader>ohh', ':e ~/configuration/nixos/users/' .. user .. '/home.nix<CR>`.zz')
-vim.keymap.set('n', '<leader>op', ':e ~/configuration/nixos/users/' .. user .. '/packages.nix<CR>`.zz')
+vim.keymap.set('n', '<leader>ohh', ':e ~/configuration/nixos/users/' .. conf.user .. '/home.nix<CR>`.zz')
+vim.keymap.set('n', '<leader>op', ':e ~/configuration/nixos/users/' .. conf.user .. '/packages.nix<CR>`.zz')
 vim.keymap.set('n', '<leader>on', ':e ~/configuration/nixos/configuration.nix<CR>`.zz')
 vim.keymap.set('n', '<leader>om', ':e ~/configuration/nixos/modules<CR>')
 vim.keymap.set('n', '<leader>ow', ':e ~/synced/brainstore/waste.txt<CR>')
@@ -101,17 +58,7 @@ vim.keymap.set('n', '<leader>ou', ':e ~/projects/university/' .. conf.season .. 
 vim.keymap.set('n', '<leader>oz', ':e ~/.zshrc<CR>`.zz')
 vim.keymap.set('n', '<leader>oaa', ':e ~/.common_shell<CR>`.zz')
 
-
-vim.keymap.set('n', '<leader>ok', open_cal)
--------------------------------------------------------------------------------------
-
-vim.keymap.set("n", "<leader>lf", links.insert_brainstore_link, { desc = "Link Brainstore file" })
-vim.keymap.set("n", "<leader>lm", links.insert_mail_link, { desc = "Link Mail" })
 vim.keymap.set('n', '<leader>ll', ':Lazy<CR>')
-vim.keymap.set("n", "<leader>lp", links.insert_project_link, { desc = "Link Project" })
-vim.keymap.set("n", "<leader>lc", links.insert_contact_link, { desc = "Link Contact" })
-vim.keymap.set("n", "<leader>ld", links.insert_date_link, { desc = "Link Contact" })
-
 
 vim.keymap.set('n', '<leader>sw', function()
 	local word = vim.fn.expand("<cword>")
@@ -150,9 +97,6 @@ end, { desc = 'Paste from system clipboard' })
 vim.keymap.set('v', '<leader>p', function()
 	vim.cmd('normal! "+p')
 end, { desc = 'Yank to clipboard and keep the selection' })
-vim.keymap.set("n", "<leader>nv", function()
-	select_course_directory()
-end, { desc = "Open UniCourse menu" })
 
 vim.keymap.set('v', 'p', function()
 	local unnamed_content = vim.fn.getreg('""')
@@ -235,3 +179,29 @@ vim.keymap.set('n', '<leader>ov',
 		})
 	end
 )
+
+vim.keymap.set("n", "<leader>r",
+	function()
+		local current_file = vim.fn.expand('%:p:h') -- get directory of current file
+		local cmd = 'git -C ' .. vim.fn.fnameescape(current_file) .. ' status'
+		vim.fn.system(cmd)
+		if vim.v.shell_error == 0 then
+			local git_root = vim.fn.systemlist('git -C ' ..
+					vim.fn.fnameescape(current_file) .. ' rev-parse --show-toplevel')
+				[1]
+			vim.cmd('cd ' .. vim.fn.fnameescape(git_root))
+		else
+			vim.cmd('cd ' .. vim.fn.fnameescape(current_file))
+		end
+	end
+)
+
+vim.keymap.set('n', '<leader>ok', function()
+	local current_date = os.date("%Y-%m-%d")
+	local week_number = os.date("%V")
+	local day_of_week = os.date("%a")
+	local path = "~/synced/brainstore/calendar/calendar_" .. os.date("%Y") .. ".txt"
+	local keys = ":e " ..
+		path .. "<CR>/" .. current_date .. " w" .. tonumber(week_number) .. " " .. day_of_week .. "<CR>$"
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), 'n', true)
+end)

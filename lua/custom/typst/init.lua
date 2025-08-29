@@ -6,7 +6,7 @@ local watch_job_id = nil
 local watch_buf_id = nil
 local watch_tab_id = nil
 
-function M.Watch_and_open()
+function M.watch_and_open()
 	-- Parse the current file and check for typst
 	vim.notify("INIT", vim.log.levels.WARN)
 	local input = vim.fn.expand("%:p")
@@ -66,7 +66,7 @@ function M.Watch_and_open()
 	vim.notify("Started Typst watch", vim.log.levels.INFO)
 
 	vim.fn.system("killall .zathura-wrapped")
-	functions.Sleep(0.5)
+	functions.sleep(0.5)
 	vim.fn.jobstart({ "zathura", output }, {
 		on_exit = function()
 			if watch_job_id then

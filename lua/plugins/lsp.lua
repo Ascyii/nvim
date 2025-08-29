@@ -1,28 +1,5 @@
--- Prefilled with lsp that have no dependencies
-local servers = { "lua_ls", "rust_analyzer", "denols" }
-
-local function populate_servers()
-	if vim.fn.executable("go") == 1 then
-		table.insert(servers, "gopls")
-	else
-		vim.notify("[mason] Skipping gopls (go not found)", vim.log.levels.WARN)
-	end
-
-	if vim.fn.executable("npm") == 1 then
-		table.insert(servers, "pyright")
-		table.insert(servers, "clangd")
-		table.insert(servers, "bashls")
-	else
-		vim.notify("[mason] Skipping install of some lsp (npm not found)", vim.log.levels.WARN)
-	end
-
-	if vim.fn.executable("cargo") == 1 then
-		table.insert(servers, "nil_ls")
-	else
-		vim.notify("[mason] Skipping nil (cargo not found)", vim.log.levels.WARN)
-	end
-end
-populate_servers()
+-- Prefilled with servers that have no dependencies
+local servers = require("utils.functions").get_lsp_servers()
 
 return {
 	{
@@ -77,7 +54,7 @@ return {
 		dependencies = {
 			"williamboman/mason-lspconfig.nvim"
 		},
-		priority = -10;
+		priority = -10,
 		config = function()
 			require("mason").setup()
 
@@ -185,7 +162,7 @@ return {
 
 			-- Add text in diagnostics
 			vim.diagnostic.config({
-				virtual_text = true,
+				virtual_text = false,
 			})
 		end,
 	},

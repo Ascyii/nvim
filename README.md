@@ -15,13 +15,6 @@ libc
 bash
 ```
 
-Optionally for more lsp servers.
-
-```
-go
-npm
-```
-
 ## General
 
 This configuration is based on the lazy plugin manager.

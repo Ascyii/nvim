@@ -25,19 +25,6 @@ end
 
 function M.mark_done()
 	if not is_todo_file() then return end
-
-	--local line = vim.api.nvim_get_current_line():match("^%s*(.-)%s*$")
-
-	--local tasks = vim.fn.systemlist("todo.sh list")
-	--for _, task in ipairs(tasks) do
-	--	--
-	--	local num,_, desc = task:match("^(%d+)%s(?:%(%S%)%s+)?(.+)$")
-	--	if desc == line then
-	--		id = num
-	--		break
-	--	end
-	--end
-
 	print("Marked todo as done! (just deleted)")
 	vim.cmd("normal! dd")
 end

@@ -1,5 +1,3 @@
--- this is the linker logic for nvim
-
 local M = {}
 
 local brainstore_dir = "~/synced/brainstore"
@@ -46,7 +44,7 @@ function M.insert_brainstore_link()
 				end
 				local selected = selection.path or selection.filename or selection[1]
 				if selected then
-					actions.close(prompt_bufnr) -- CLOSE with prompt_bufnr
+					actions.close(prompt_bufnr)
 					local link = "[[brain:" .. selected:gsub(vim.fn.expand(brainstore_dir) .. "/", "") .. "]]"
 					vim.cmd("normal! h")
 					vim.api.nvim_put({ link }, "c", true, true)
@@ -61,10 +59,7 @@ function M.insert_brainstore_link()
 	})
 end
 
--- fetches new send mail and creates a link to a selected mail
--- the link can the like any other link followed
 function M.insert_mail_link()
-	-- TODO: real parsing of the mails when there are multiple in one file
 	vim.fn.system("python " .. vim.fn.expand("~/projects/scripts/extract_mail.py"))
 	vim.fn.system("find " .. mail_dir .. " -type f > /tmp/mail_files")
 	local mails = vim.fn.readfile("/tmp/mail_files")
@@ -86,14 +81,11 @@ function M.insert_contact_link()
 end
 
 function M.insert_date_link()
-	local year = os.date("%y") -- get current year (e.g., "25" for 2025)
+	local year = os.date("%y")
 	local text = string.format("[[date:.%s]]", year)
 
 	vim.api.nvim_put({ text }, "c", true, true)
-
-	-- Move cursor back inside the brackets before the year
 	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-	-- Move left by 2 + length of year (e.g., 2 + 2 = 4 for "25")
 	vim.api.nvim_win_set_cursor(0, { row, col - 4 })
 	vim.cmd("startinsert")
 end
@@ -236,7 +228,6 @@ function M.follow_link()
 		local month = pad2(splits[2])
 		local year = splits[3]
 
-		-- Normalize year: if 4 digits, cut to last two
 		if #year == 4 then
 			year = year:sub(3, 4)
 		end

@@ -26,7 +26,7 @@ function get_course_directories()
 		end
 	end
 
-	scan_dir("/home/jonas/projects/university/" .. current_season) -- Assuming all your courses are under the S2 folder
+	scan_dir("~/projects/university/" .. current_season)
 	return dirs
 end
 

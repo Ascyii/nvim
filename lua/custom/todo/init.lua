@@ -22,9 +22,6 @@ function M.remove_priority()
 	vim.api.nvim_set_current_line(line)
 end
 
-local function strip_ansi(s)
-  return   s:gsub("\27%[[0-9;]*m", "")
-end
 
 function M.mark_done()
 	if not is_todo_file() then return end

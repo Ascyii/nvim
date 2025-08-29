@@ -8,7 +8,7 @@ local mail_dir = "~/mail/plain_emails"
 local contacts_file = "~/synced/vault/contacts/contacts.txt"
 local cal_dir = "~/synced/brainstore/calendar"
 
-function fzf_select(options, prompt, callback)
+local function fzf_select(options, prompt, callback)
 	local fzf = require("fzf-lua")
 	fzf.fzf_exec(options, {
 		prompt = prompt .. "> ",
@@ -46,10 +46,10 @@ function M.insert_brainstore_link()
 				end
 				local selected = selection.path or selection.filename or selection[1]
 				if selected then
-					actions.close(prompt_bufnr)  -- CLOSE with prompt_bufnr
+					actions.close(prompt_bufnr) -- CLOSE with prompt_bufnr
 					local link = "[[brain:" .. selected:gsub(vim.fn.expand(brainstore_dir) .. "/", "") .. "]]"
 					vim.cmd("normal! h")
-					vim.api.nvim_put({link}, "c", true, true)
+					vim.api.nvim_put({ link }, "c", true, true)
 				end
 			end
 
@@ -71,7 +71,7 @@ function M.insert_mail_link()
 
 	fzf_select(mails, "Mails", function(selected)
 		local link = "[[mail:" .. selected:gsub(vim.fn.expand(mail_dir) .. "/", "") .. "]]"
-		vim.api.nvim_put({link}, "c", true, true)
+		vim.api.nvim_put({ link }, "c", true, true)
 	end)
 end
 
@@ -81,7 +81,7 @@ function M.insert_contact_link()
 	fzf_select(contacts, "Contacts", function(selected)
 		local name = selected:match("^(.-)%s") or selected -- get first word as contact name
 		local link = "[[contact:" .. name .. "]]"
-		vim.api.nvim_put({link}, "c", true, true)
+		vim.api.nvim_put({ link }, "c", true, true)
 	end)
 end
 
@@ -129,7 +129,7 @@ function M.insert_project_link()
 						no_ignore = true,
 						follow = true,
 						disable_devicons = true,
-						prompt_title = "Pick a file. Press <ESC> to link just " .. project  .. ".",
+						prompt_title = "Pick a file. Press <ESC> to link just " .. project .. ".",
 						cwd = vim.fn.expand(selected),
 						find_command = {
 							"rg", "--files",
@@ -148,15 +148,16 @@ function M.insert_project_link()
 								local selected = selection.path or selection.filename or selection[1]
 								if selected then
 									actions.close(prompt_bufnr)
-									local link = "[[project:" .. selected:gsub(vim.fn.expand(projects_dir) .. "/", "") .. "]]"
-									vim.api.nvim_put({link}, "c", true, true)
+									local link = "[[project:" ..
+									selected:gsub(vim.fn.expand(projects_dir) .. "/", "") .. "]]"
+									vim.api.nvim_put({ link }, "c", true, true)
 								end
 							end
 
 							local function insert_link_top()
 								actions.close(prompt_bufnr)
 								local link = "[[project:" .. project .. "]]"
-								vim.api.nvim_put({link}, "c", true, true)
+								vim.api.nvim_put({ link }, "c", true, true)
 							end
 
 							map('i', '<CR>', insert_link)
@@ -169,9 +170,6 @@ function M.insert_project_link()
 							return true
 						end
 					})
-
-
-
 				end
 			end
 
@@ -183,25 +181,24 @@ function M.insert_project_link()
 	})
 end
 
-
 local function spliting(inputstr, sep)
 	if sep == nil then
 		sep = "%s"
 	end
 	local t = {}
-	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+	for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
 		table.insert(t, str)
 	end
 	return t
 end
 
 local function pad2(n)
-  n = tonumber(n)
-  if n < 10 then
-    return "0" .. n
-  else
-    return tostring(n)
-  end
+	n = tonumber(n)
+	if n < 10 then
+		return "0" .. n
+	else
+		return tostring(n)
+	end
 end
 
 -- The heart of this project following
@@ -253,4 +250,3 @@ function M.follow_link()
 end
 
 return M
-

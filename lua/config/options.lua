@@ -1,23 +1,18 @@
-
--- vim.o.textwidth = 80
--- vim.o.wrap = true;
 vim.o.shiftwidth = 4;
 vim.o.tabstop = 4;
 vim.o.number = true;
 vim.o.ignorecase = true;
-vim.o.mouse= "";
 
--- this stands for undofile and should be always used because why not?
+-- Disable mouse completly
+vim.o.mouse = "";
+
+-- Turn on undofile
 vim.o.udf = true;
 
--- optionally enable 24-bit colour
+-- Enable more colors
 vim.opt.termguicolors = true
 
-if vim.g.diffm then
-	vim.g.loaded_netrw = 0
-	vim.g.loaded_netrwPlugin = 0
-else
-	vim.g.loaded_netrw = 1
-	vim.g.loaded_netrwPlugin = 1
-end
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 vim.opt.signcolumn = "yes"

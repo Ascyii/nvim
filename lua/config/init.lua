@@ -1,8 +1,7 @@
 -- Load lazy first
 require('config.lazy')
 
--- General settings
+-- General settings for nvim
 require('config.options')
 require('config.keymaps')
 require('config.autocmds')
-require('config.lsp')

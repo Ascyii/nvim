@@ -22,6 +22,9 @@ M.open_today = function()
 		-- If the file does not exist, create and write the header
 		local header = string.format("# Journal Entry - [[date:%s]]\n\n", os.date("%d.%m.%y"))
 		file = io.open(full_path, "w")
+		if file == nil then
+			return
+		end
 		file:write(header)
 		file:close()
 	end

@@ -60,12 +60,4 @@ return {
 			vim.keymap.set("n", "<leader>bd", ":BufferDelete<CR>")
 		end
 	},
-
-	{
-		"goolord/alpha-nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("dashboard")
-		end
-	}
 }

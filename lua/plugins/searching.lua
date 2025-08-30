@@ -54,9 +54,9 @@ return {
 				function()
 					require('telescope.builtin').find_files({
 						hidden = true,
-						no_ignore = true, -- Also show files in gitignore
+						no_ignore = true,
 						follow = true,
-						disable_devicons = true,
+						disable_devicons = false,
 						prompt_title = "Find Files",
 						find_command = {
 							"rg", "--files",

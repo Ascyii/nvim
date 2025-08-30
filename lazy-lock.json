@@ -27,5 +27,6 @@
   "telekasten.nvim": { "branch": "main", "commit": "b3ac2b07f2df504bb80112fec349714086a80037" },
   "telescope.nvim": { "branch": "master", "commit": "b4da76be54691e854d3e0e02c36b0245f945c2c7" },
   "toggleterm.nvim": { "branch": "main", "commit": "9a88eae817ef395952e08650b3283726786fb5fb" },
+  "typstar": { "branch": "main", "commit": "67a76bec16af7c726a77b9c3a15ef37b34967a9c" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
 }

@@ -75,6 +75,7 @@ vim.keymap.set('n', '<leader>oho', ':e ~/nixos/hosts<CR>')
 vim.keymap.set('n', '<leader>ll', ':Lazy<CR>')
 
 vim.keymap.set('n', '<leader>sw', function()
+
 	local word = vim.fn.expand("<cword>")
 	local replacement = vim.fn.input("Replace '" .. word .. "' with: ")
 	if replacement ~= "" then

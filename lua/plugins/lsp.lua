@@ -75,6 +75,17 @@ return {
 
 	},
 	{
+		"folke/lazydev.nvim",
+		ft = "lua", -- only load on lua files
+		opts = {
+			library = {
+				-- See the configuration section for more details
+				-- Load luvit types when the `vim.uv` word is found
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
+	},
+	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
 			"hrsh7th/cmp-path",
@@ -84,15 +95,17 @@ return {
 		},
 		config = function()
 			local cmp = require("cmp")
+			local border = "single"
+			local max_entries = 7
 
 			cmp.setup({
 				window = {
 					completion = cmp.config.window.bordered({
-						border = "rounded",
+						border = border,
 						scrollbar = false,
 					}),
 					documentation = cmp.config.window.bordered({
-						border = "rounded",
+						border = border,
 						scrollbar = false,
 					}),
 				},
@@ -112,8 +125,7 @@ return {
 					{ name = "buffer" },
 					{ name = "path" },
 				}),
-				performance = { max_view_entries = 25 },
-
+				performance = { max_view_entries = max_entries },
 			})
 		end
 	},
@@ -127,15 +139,7 @@ return {
 			local lspconfig = require("lspconfig")
 
 			-- Custom overwrites for servers
-			local server_settings = {
-				lua_ls = {
-					settings = {
-						Lua = {
-							diagnostics = { globals = { "vim" } },
-						},
-					},
-				},
-			}
+			local server_settings = {}
 
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -153,10 +157,12 @@ return {
 				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
-				vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-				vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-				--vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
-				-- vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, opts)
+				vim.keymap.set("n", "]d", function()
+					vim.diagnostic.jump({count=1, float=true})
+				end, opts)
+				vim.keymap.set("n", "[d", function()
+					vim.diagnostic.jump({count=-1, float=true})
+				end, opts)
 
 				vim.keymap.set("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, opts)
 				vim.keymap.set("n", "<leader>lwr", vim.lsp.buf.remove_workspace_folder, opts)

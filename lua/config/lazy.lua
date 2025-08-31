@@ -34,3 +34,5 @@ require("lazy").setup({
 		enabled = false,
 	},
 })
+
+require("utils.after")

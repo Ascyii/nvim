@@ -71,9 +71,10 @@ function M.get_lsp_servers()
 		end
 
 		if vim.fn.executable("deno") == 1 then
-			table.insert(servers, "denols")
+			--table.insert(servers, "denols")
+			table.insert(servers, "ts_ls")
 		else
-			warn_once("deno", "[mason] Skipping denols (deno not found)")
+			warn_once("deno", "[mason] Skipping denols and tsserver (deno not found)")
 		end
 
 		-- Only configure zig when in local environment

@@ -59,18 +59,18 @@ vim.keymap.set('n', '<leader>ocp', ':e ~/.config/nvim/lua/plugins/misc.lua<CR>`.
 vim.keymap.set('n', '<leader>ocf', ':e ~/.config/nvim/lua/utils/functions.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oca', ':e ~/.config/nvim/lua/utils/after.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oq', ':e ~/synced/brainstore/input.txt<CR>`.zz')
-vim.keymap.set('n', '<leader>ohh', ':e ~/configuration/nixos/users/' .. conf.user .. '/home.nix<CR>`.zz')
-vim.keymap.set('n', '<leader>op', ':e ~/configuration/nixos/users/' .. conf.user .. '/packages.nix<CR>`.zz')
-vim.keymap.set('n', '<leader>on', ':e ~/configuration/nixos/configuration.nix<CR>`.zz')
-vim.keymap.set('n', '<leader>om', ':e ~/configuration/nixos/modules<CR>')
-vim.keymap.set('n', '<leader>ow', ':e ~/synced/brainstore/waste.txt<CR>')
-vim.keymap.set('n', '<leader>oho', ':e ~/configuration/nixos/hosts<CR>')
-vim.keymap.set('n', '<leader>os', ':e ~/configuration/nixos/modules/server<CR>')
 vim.keymap.set('n', '<leader>ot', ':e ~/synced/brainstore/todos/todo.txt<CR>`.zz')
 vim.keymap.set('n', '<leader>od', ':e ~/synced/brainstore/todos/done.txt<CR>`.zz')
 vim.keymap.set('n', '<leader>ou', ':e ~/projects/university/' .. conf.season .. '/input.txt<CR>`.zz')
 vim.keymap.set('n', '<leader>oz', ':e ~/.zshrc<CR>`.zz')
 vim.keymap.set('n', '<leader>oaa', ':e ~/.common_shell<CR>`.zz')
+vim.keymap.set('n', '<leader>ow', ':e ~/synced/brainstore/waste.txt<CR>')
+
+vim.keymap.set('n', '<leader>ohh', ':e ~/nixos/user/home.nix<CR>`.zz')
+vim.keymap.set('n', '<leader>op', ':e ~/nixos/user/packages.nix<CR>`.zz')
+vim.keymap.set('n', '<leader>on', ':e ~/nixos/configuration.nix<CR>`.zz')
+vim.keymap.set('n', '<leader>om', ':e ~/nixos/modules/<CR>')
+vim.keymap.set('n', '<leader>oho', ':e ~/nixos/hosts<CR>')
 
 vim.keymap.set('n', '<leader>ll', ':Lazy<CR>')
 
@@ -201,8 +201,8 @@ vim.keymap.set("n", "<leader>r",
 		vim.fn.system(cmd)
 		if vim.v.shell_error == 0 then
 			local git_root = vim.fn.systemlist('git -C ' ..
-					vim.fn.fnameescape(current_file) .. ' rev-parse --show-toplevel')
-				[1]
+				vim.fn.fnameescape(current_file) .. ' rev-parse --show-toplevel')
+			[1]
 			vim.cmd('cd ' .. vim.fn.fnameescape(git_root))
 		else
 			vim.cmd('cd ' .. vim.fn.fnameescape(current_file))
@@ -214,8 +214,8 @@ vim.keymap.set('n', '<leader>ok', function()
 	local current_date = os.date("%Y-%m-%d")
 	local week_number = os.date("%V")
 	local day_of_week = os.date("%a")
-	local path = "~/synced/brainstore/calendar/calendar_" .. os.date("%Y") .. ".txt"
+	local path = "~/storage/notes/calendar/calendar_" .. os.date("%Y") .. ".txt"
 	local keys = ":e " ..
-		path .. "<CR>/" .. current_date .. " w" .. tonumber(week_number) .. " " .. day_of_week .. "<CR>$"
+	path .. "<CR>/" .. current_date .. " w" .. tonumber(week_number) .. " " .. day_of_week .. "<CR>$"
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), 'n', true)
 end)

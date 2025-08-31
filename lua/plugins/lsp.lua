@@ -58,9 +58,17 @@ return {
 		config = function()
 			require("mason").setup()
 
+			-- Workaround for local zls
+			local servers_modified = servers
+			for i, v in ipairs(servers_modified) do
+				if v == "zls" then
+					table.remove(servers_modified, i)
+					break
+				end
+			end
 
 			require("mason-lspconfig").setup({
-				ensure_installed = servers,
+				ensure_installed = servers_modified,
 				automatic_installation = true,
 			})
 		end,
@@ -90,9 +98,9 @@ return {
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
 				}, {
-					{ name = "buffer" },
-					{ name = "path" },
-				}),
+						{ name = "buffer" },
+						{ name = "path" },
+					}),
 			})
 		end
 	},
@@ -135,11 +143,11 @@ return {
 				vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
 				vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 				--vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
-				vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, opts)
+				-- vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, opts)
 
-				vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
-				vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
-				vim.keymap.set("n", "<leader>wl", function()
+				vim.keymap.set("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, opts)
+				vim.keymap.set("n", "<leader>lwr", vim.lsp.buf.remove_workspace_folder, opts)
+				vim.keymap.set("n", "<leader>lwl", function()
 					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 				end, opts)
 

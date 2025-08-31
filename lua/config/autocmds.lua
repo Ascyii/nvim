@@ -12,17 +12,25 @@ vim.api.nvim_create_autocmd("VimLeave", {
 	end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "nix",
+	callback = function()
+		vim.bo.tabstop = 2
+		vim.bo.shiftwidth = 2
+		vim.bo.expandtab = true
+	end,
+})
+
 vim.api.nvim_create_augroup("RememberFolds", {
 	clear = true
 })
-vim.api.nvim_create_autocmd({"BufWinLeave"}, {
-  group = "RememberFolds",
-  pattern = "*",
-  command = "silent! mkview",
+vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
+	group = "RememberFolds",
+	pattern = "*",
+	command = "silent! mkview",
 })
-vim.api.nvim_create_autocmd({"BufWinEnter"}, {
-  group = "RememberFolds",
-  pattern = "*",
-  command = "silent! loadview",
+vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+	group = "RememberFolds",
+	pattern = "*",
+	command = "silent! loadview",
 })
-

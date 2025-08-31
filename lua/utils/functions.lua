@@ -63,7 +63,7 @@ function M.get_lsp_servers()
 			if vim.fn.executable("nix") == 1 then
 				table.insert(servers, "nil_ls")
 			else
-				warn_once("nix", "[mason] Skipping nil_ls (nix not found)")
+				warn_once("nix", "[mason] Skipping nil_ls and nixfmt (nix not found)")
 			end
 			table.insert(servers, "rust_analyzer")
 		else
@@ -74,6 +74,11 @@ function M.get_lsp_servers()
 			table.insert(servers, "denols")
 		else
 			warn_once("deno", "[mason] Skipping denols (deno not found)")
+		end
+
+		-- Only configure zig when in local environment
+		if vim.fn.executable("zls") == 1 then
+			table.insert(servers, "zls")
 		end
 	end
 

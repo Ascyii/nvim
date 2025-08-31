@@ -1,5 +1,6 @@
 return {
 	"nvim-tree/nvim-tree.lua",
+	cmd = {"NvimTreeOpen"},
 	keys = {
 		{ "<leader>e", function()
 			require("nvim-tree.api").tree.toggle({

@@ -84,7 +84,18 @@ return {
 		},
 		config = function()
 			local cmp = require("cmp")
+
 			cmp.setup({
+				window = {
+					completion = cmp.config.window.bordered({
+						border = "rounded",
+						scrollbar = false,
+					}),
+					documentation = cmp.config.window.bordered({
+						border = "rounded",
+						scrollbar = false,
+					}),
+				},
 				snippet = {
 					expand = function(args) require("luasnip").lsp_expand(args.body) end,
 				},
@@ -98,9 +109,11 @@ return {
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
 				}, {
-						{ name = "buffer" },
-						{ name = "path" },
-					}),
+					{ name = "buffer" },
+					{ name = "path" },
+				}),
+				performance = { max_view_entries = 25 },
+
 			})
 		end
 	},

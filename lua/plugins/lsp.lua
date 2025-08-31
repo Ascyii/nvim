@@ -65,6 +65,10 @@ return {
 					table.remove(servers_modified, i)
 					break
 				end
+				if v == "clangd" then
+					table.remove(servers_modified, i)
+					break
+				end
 			end
 
 			require("mason-lspconfig").setup({

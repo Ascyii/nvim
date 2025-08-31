@@ -52,9 +52,14 @@ function M.get_lsp_servers()
 		end
 
 		if vim.fn.executable("npm") == 1 then
+			if vim.fn.executable("clangd") == 1 then
+				table.insert(servers, "clangd")
+			end
 			table.insert(servers, "pyright")
-			table.insert(servers, "clangd")
 			table.insert(servers, "bashls")
+			table.insert(servers, "cssls")
+			table.insert(servers, "html")
+			table.insert(servers, "jsonls")
 		else
 			warn_once("npm", "[mason] Skipping pyright/clangd/bashls (npm not found)")
 		end

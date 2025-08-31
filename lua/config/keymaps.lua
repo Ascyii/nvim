@@ -20,7 +20,7 @@ vim.keymap.set("n", "<leader>snf", "<cmd>set nonu<CR>")
 vim.keymap.set("n", "n", "nzz", { silent = true })
 vim.keymap.set("n", "N", "Nzz", { silent = true })
 vim.keymap.set("n", "<C-o>", "<C-o>zz", { silent = true })
-vim.keymap.set("n", "<C-i>", "<C-i>zz", { silent = true })
+vim.keymap.set("n", "<`C-i>", "<C-i>zz", { silent = true })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { silent = true })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { silent = true })
 vim.keymap.set('n', '<leader>a', 'm9ggVG"+y`9')
@@ -44,8 +44,8 @@ local function toggle_fold()
 	end
 	is_all_folded = not is_all_folded
 end
-vim.api.nvim_set_keymap("n", "<leader>ft", "za", opts)      -- toggle fold under cursor
-vim.keymap.set("n", "<leader>fs", toggle_fold, opts)  -- close all folds
+vim.api.nvim_set_keymap("n", "<leader>ft", "za", opts) -- toggle fold under cursor
+vim.keymap.set("n", "<leader>fs", toggle_fold, opts)   -- close all folds
 
 -- Quickly open some buffers
 vim.keymap.set('n', '<leader>occ', ':e ~/.config/nvim/init.lua<CR>`.zz')
@@ -75,7 +75,6 @@ vim.keymap.set('n', '<leader>oho', ':e ~/nixos/hosts<CR>')
 vim.keymap.set('n', '<leader>ll', ':Lazy<CR>')
 
 vim.keymap.set('n', '<leader>sw', function()
-
 	local word = vim.fn.expand("<cword>")
 	local replacement = vim.fn.input("Replace '" .. word .. "' with: ")
 	if replacement ~= "" then
@@ -202,8 +201,8 @@ vim.keymap.set("n", "<leader>r",
 		vim.fn.system(cmd)
 		if vim.v.shell_error == 0 then
 			local git_root = vim.fn.systemlist('git -C ' ..
-				vim.fn.fnameescape(current_file) .. ' rev-parse --show-toplevel')
-			[1]
+					vim.fn.fnameescape(current_file) .. ' rev-parse --show-toplevel')
+				[1]
 			vim.cmd('cd ' .. vim.fn.fnameescape(git_root))
 		else
 			vim.cmd('cd ' .. vim.fn.fnameescape(current_file))
@@ -217,6 +216,6 @@ vim.keymap.set('n', '<leader>ok', function()
 	local day_of_week = os.date("%a")
 	local path = "~/storage/notes/calendar/calendar_" .. os.date("%Y") .. ".txt"
 	local keys = ":e " ..
-	path .. "<CR>/" .. current_date .. " w" .. tonumber(week_number) .. " " .. day_of_week .. "<CR>$"
+		path .. "<CR>/" .. current_date .. " w" .. tonumber(week_number) .. " " .. day_of_week .. "<CR>$"
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), 'n', true)
 end)

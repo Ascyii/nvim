@@ -1,11 +1,11 @@
 # Neovim configuration in pure lua
 
-You can configure the current semester that you are in for university integrations.  
-There are certain things required like `make` and `npm` for various plugins.
+Configure the environment in `conf.lua`.
+Most lsp require `npm` installed on the system.
 
 ## Dependencies
 
-To install proper snippets and get the basic lsp the following programs are needed in path.
+To install proper snippets and get lsp running install the following programs into your path
 
 ```
 make
@@ -14,8 +14,3 @@ gcc
 libc
 bash
 ```
-
-## General
-
-This configuration is based on the lazy plugin manager.
-

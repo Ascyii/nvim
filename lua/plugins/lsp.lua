@@ -58,7 +58,8 @@ return {
 		config = function()
 			require("mason").setup()
 
-			-- Workaround for local zls
+			-- Workaround for local lsp only
+			-- does not work so nice on non nixos systems
 			local servers_modified = servers
 			for i, v in ipairs(servers_modified) do
 				if v == "zls" then
@@ -66,6 +67,10 @@ return {
 					break
 				end
 				if v == "clangd" then
+					table.remove(servers_modified, i)
+					break
+				end
+				if v == "hls" then
 					table.remove(servers_modified, i)
 					break
 				end

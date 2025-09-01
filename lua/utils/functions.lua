@@ -51,6 +51,18 @@ function M.get_lsp_servers()
 			warn_once("gopls", "[mason] Skipping gopls (go not found)")
 		end
 
+		if vim.fn.executable("php") == 1 then
+			table.insert(servers, "intelephense")
+		else
+			warn_once("php", "[mason] Skipping intelephense (php not found)")
+		end
+
+		if vim.fn.executable("hls") == 1 then
+			table.insert(servers, "hls")
+		else
+			warn_once("haskell", "[mason] Skipping hls (hls not found)")
+		end
+
 		if vim.fn.executable("npm") == 1 then
 			if vim.fn.executable("clangd") == 1 then
 				table.insert(servers, "clangd")
@@ -61,7 +73,7 @@ function M.get_lsp_servers()
 			table.insert(servers, "html")
 			table.insert(servers, "jsonls")
 		else
-			warn_once("npm", "[mason] Skipping pyright/clangd/bashls (npm not found)")
+			warn_once("npm", "[mason] Skipping npm related (npm not found)")
 		end
 
 		if vim.fn.executable("cargo") == 1 then
@@ -76,13 +88,11 @@ function M.get_lsp_servers()
 		end
 
 		if vim.fn.executable("deno") == 1 then
-			--table.insert(servers, "denols")
 			table.insert(servers, "ts_ls")
 		else
 			warn_once("deno", "[mason] Skipping denols and tsserver (deno not found)")
 		end
 
-		-- Only configure zig when in local environment
 		if vim.fn.executable("zls") == 1 then
 			table.insert(servers, "zls")
 		end

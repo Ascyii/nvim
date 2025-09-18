@@ -54,7 +54,7 @@ vim.keymap.set('n', '<leader>ock', ':e ~/.config/nvim/lua/config/keymaps.lua<CR>
 vim.keymap.set('n', '<leader>ocd', ':e ~/.config/nvim/lua/config/autocmds.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oco', ':e ~/.config/nvim/lua/config/options.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>ocl', ':e ~/.config/nvim/lua/config/lazy.lua<CR>`.zz')
-vim.keymap.set('n', '<leader>oczl', ':e ~/.config/nvim/lua/config/lsp.lua<CR>`.zz')
+vim.keymap.set('n', '<leader>oczl', ':e ~/.config/nvim/lua/plugins/lsp.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>ocp', ':e ~/.config/nvim/lua/plugins/misc.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>ocf', ':e ~/.config/nvim/lua/utils/functions.lua<CR>`.zz')
 vim.keymap.set('n', '<leader>oca', ':e ~/.config/nvim/lua/utils/after.lua<CR>`.zz')

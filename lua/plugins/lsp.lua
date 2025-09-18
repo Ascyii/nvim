@@ -78,7 +78,7 @@ return {
 
 			require("mason-lspconfig").setup({
 				ensure_installed = servers_modified,
-				automatic_installation = true,
+				automatic_enable = false,
 			})
 		end,
 
@@ -134,7 +134,15 @@ return {
 					{ name = "buffer" },
 					{ name = "path" },
 				}),
-				performance = { max_view_entries = max_entries },
+				performance = {
+					debounce = 60,
+					throttle = 30,
+					fetching_timeout = 500,
+					filtering_context_budget = 3,
+					confirm_resolve_timeout = 80,
+					async_budget = 1,
+					max_view_entries = max_entries,
+				}
 			})
 		end
 	},
@@ -167,10 +175,10 @@ return {
 				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
 				vim.keymap.set("n", "]d", function()
-					vim.diagnostic.jump({count=1, float=true})
+					vim.diagnostic.jump({ count = 1, float = true })
 				end, opts)
 				vim.keymap.set("n", "[d", function()
-					vim.diagnostic.jump({count=-1, float=true})
+					vim.diagnostic.jump({ count = -1, float = true })
 				end, opts)
 
 				vim.keymap.set("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, opts)

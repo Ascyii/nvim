@@ -7,10 +7,14 @@ return {
 			local configs = require("nvim-treesitter.configs")
 			configs.setup({
 				sync_install = true,
-				ensure_installed = { "typst", "go", "bash", "python", "nix", "lua" },
+				ensure_installed = { "css", "html", "rust", "php", "typst", "go", "bash", "python", "nix", "lua", "cpp", "c", "java" },
+				auto_install = true,
 				highlight = { enable = true },
 				indent = { enable = true },
 				fold = { enable = true },
+
+				ignore_install = {},
+				modules = {},
 			})
 		end
 	},

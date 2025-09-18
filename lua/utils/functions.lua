@@ -67,6 +67,10 @@ function M.get_lsp_servers()
 			if vim.fn.executable("clangd") == 1 then
 				table.insert(servers, "clangd")
 			end
+
+			if vim.fn.executable("java") == 1 then
+				table.insert(servers, "jdtls")
+			end
 			table.insert(servers, "pyright")
 			table.insert(servers, "bashls")
 			table.insert(servers, "cssls")
@@ -96,6 +100,7 @@ function M.get_lsp_servers()
 		if vim.fn.executable("zls") == 1 then
 			table.insert(servers, "zls")
 		end
+
 	end
 
 	populate_servers()

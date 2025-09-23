@@ -16,6 +16,10 @@ return {
 			end)
 		end
 	},
+	--{
+	--	'Exafunction/windsurf.vim',
+	--	event = 'BufEnter'
+	--},
 	{
 		"akinsho/toggleterm.nvim",
 		config = function()

@@ -153,14 +153,10 @@ return {
 			"L3MON4D3/LuaSnip",
 		},
 		config = function()
-			local lspconfig = require("lspconfig")
-
 			-- Custom overwrites for servers
 			local server_settings = {}
 
-
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 			local on_attach = function(_, bufnr)
 				local opts = { buffer = bufnr, noremap = true, silent = true }
 				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -192,7 +188,7 @@ return {
 				end, opts)
 			end
 
-			-- Setup servers manually
+			-- Setup and enable servers manually
 			for _, server in ipairs(servers) do
 				local config = {
 					capabilities = capabilities,
@@ -201,7 +197,8 @@ return {
 				if server_settings[server] then
 					config = vim.tbl_deep_extend("force", config, server_settings[server])
 				end
-				lspconfig[server].setup(config)
+				vim.lsp.config(server, config)
+				vim.lsp.enable(server)
 			end
 
 			-- Add text in diagnostics

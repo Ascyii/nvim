@@ -116,6 +116,36 @@ function M.get_newest_vl_file(files)
 	return newest_file
 end
 
+-- Function to insert chapter reference at top summary section
+local function add_chapter_to_summary(course, new_vl_name)
+	local book_file = vim.fn.expand(conf.book_file)
+	local rel_path = string.format("%s/VL/%s", course.path:match("university/(.+)$"), new_vl_name)
+	local default_title = new_vl_name
+	local chapter_line = string.format('        - #chapter("%s")[%s]\n', rel_path, default_title:match("^(.-)%."))
+
+	local lines = {}
+	for l in io.lines(book_file) do
+		table.insert(lines, l)
+	end
+
+	local out = io.open(book_file, "w")
+	local inserted = false
+	local right_block = false
+	for _, l in ipairs(lines) do
+		-- insert after the course's existing index line
+		if not inserted and l:match('"' .. course.path:match("university/(.+)$") .. '/index.typ"') then
+			right_block = true
+		end
+		if not inserted and right_block and l:match("^%s*$") then
+			out:write(chapter_line .. "\n" .. l)
+			inserted = true
+		else
+			out:write(l .. "\n")
+		end
+	end
+	out:close()
+end
+
 -- Function to create a new VL file based on the template and incrementing the number
 function M.create_new_vl(course)
 	local vl_dir = course.path .. "/VL"
@@ -144,6 +174,8 @@ function M.create_new_vl(course)
 
 		-- Copy the template if it exists
 		vim.fn.system({ "cp", template_path, new_vl_path })
+
+		add_chapter_to_summary(course, new_vl_name)
 
 		-- Open the new VL file
 		vim.cmd("edit " .. new_vl_path)

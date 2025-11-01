@@ -26,3 +26,12 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevelstart = 99 -- open all folds by default
 vim.opt.fillchars = "fold:╌"
+
+vim.g.GPGDefaultRecipients = {"C6772451703DE183A4983CBA063DC054484835A6"}
+
+vim.o.expandtab = true      -- Use spaces instead of tabs
+vim.o.shiftwidth = 4        -- Number of spaces per indentation
+vim.o.tabstop = 4           -- Number of spaces a tab counts for
+vim.o.smarttab = true       -- Insert 'shiftwidth' spaces when pressing Tab
+vim.o.autoindent = true     -- Maintain indent of current line
+vim.o.smartindent = true    -- Smart auto-indenting

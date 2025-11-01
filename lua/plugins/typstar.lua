@@ -28,6 +28,10 @@ return {
 				":TypstarInsertRnote<CR>",
 			},
 			{
+				"<leader>td",
+				":TypstarDeleteRnote<CR>",
+			},
+			{
 				"<leader>to",
 				":TypstarOpenDrawing<CR>",
 			},

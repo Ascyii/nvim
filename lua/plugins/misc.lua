@@ -21,6 +21,10 @@ return {
 	--	event = 'BufEnter'
 	--},
 	{
+		"Ascyii/vim-gnupg",
+		dev = true
+	},
+	{
 		"akinsho/toggleterm.nvim",
 		config = function()
 			-- Cannot setup with opts here need to call before using the command for the plugin
@@ -45,7 +49,7 @@ return {
 		'Ascyii/telekasten.nvim',
 		dev = true,
 		config = function()
-			local base_zet = "~/synced/brainstore/zettelkasten"
+			local base_zet = "~/Nextcloud/Notes"
 
 			-- Again can only use opts when not using config
 			require("telekasten").setup({

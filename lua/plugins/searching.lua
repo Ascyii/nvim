@@ -34,14 +34,8 @@ return {
 			{
 				"<leader>g",
 				function()
-					require('telescope.builtin').live_grep({
-						disable_devicons = true,
-						cwd = vim.fn.getcwd(),
-						additional_args = function()
-							return { '--hidden', '--glob', '!.git/*' }
-						end,
-					})
-				end
+					require('utils.functions').fzf_wrapped("grep")
+                end
 			},
 			{
 				"<leader>fh",
@@ -52,20 +46,8 @@ return {
 			{
 				"<leader><leader>",
 				function()
-					require('telescope.builtin').find_files({
-						hidden = true,
-						no_ignore = true,
-						follow = true,
-						disable_devicons = false,
-						prompt_title = "Find Files",
-						find_command = {
-							"rg", "--files",
-							"--glob", "!**/.git/*",
-							"--glob", "!**/build/*",
-							"--glob", "!**/*.{jpg,png,gif,mp4,mkv,tar,zip,iso}"
-						}
-					})
-				end
+					require('utils.functions').fzf_wrapped("find")
+                end
 			}
 		},
 		config = true,

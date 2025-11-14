@@ -26,6 +26,14 @@ return {
 		},
 	},
 	{
+		dir = get_custom_dir("typst"),
+		name = "typst",
+		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+		keys = {
+			{ "<leader>tu", function() require("custom.typst").just_open() end, desc = "Open Typst" },
+		},
+	},
+	{
 		dir = get_custom_dir("journal"),
 		name = "journal",
 		config = function ()

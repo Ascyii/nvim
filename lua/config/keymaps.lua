@@ -114,6 +114,8 @@ vim.keymap.set('v', '<leader>p', function()
 	vim.cmd('normal! "+p')
 end, { desc = 'Yank to clipboard and keep the selection' })
 
+vim.keymap.set('n', 'nh', ":noh<CR>")
+
 vim.keymap.set('v', '<leader>y', function()
 	vim.cmd('normal! "+y')
 	vim.cmd('normal! gv')

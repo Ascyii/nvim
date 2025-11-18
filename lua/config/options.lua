@@ -3,6 +3,12 @@ vim.o.tabstop = 4;
 vim.o.number = true;
 vim.opt.relativenumber = true
 vim.o.ignorecase = true;
+--vim.o.guicursor = "n-v-c-sm-i-ci-ve:block";
+vim.o.cursorline = true
+vim.cmd([[
+    highlight CursorLine cterm=NONE guibg=#4c3c3c
+]])
+
 
 -- Disable mouse completly
 vim.o.mouse = "";

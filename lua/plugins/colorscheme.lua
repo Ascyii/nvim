@@ -8,6 +8,12 @@ return {
 			vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 		end
 
+        require("gruvbox").setup({
+            palette_overrides = {
+                bright_yellow = "#AD5944"; -- workaround
+            }
+        })
+
 		vim.cmd.colorscheme("gruvbox")
 
 		transparentBackground()

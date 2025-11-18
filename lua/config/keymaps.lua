@@ -31,7 +31,7 @@ vim.keymap.set('n', '<leader>tr', ':tabnew<CR>:term<CR>i')
 vim.keymap.set('n', '<leader>ia', 'gg=G<C-o>zz') -- This can break
 vim.keymap.set('n', '<leader>ya', 'ggVG"+y<C-o>')
 vim.keymap.set('n', '<leader>ss', ':wa<CR>')
-vim.keymap.set("n", "<leader>nn", ":e ~/synced/brainstore/zettelkasten/quick<CR>", { silent = true })
+vim.keymap.set("n", "<leader>nn", ":e ~/Nextcloud/Notes/quick.txt<CR>", { silent = true })
 
 -- Folding
 local opts = { noremap = true, silent = true }

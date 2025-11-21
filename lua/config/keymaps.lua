@@ -72,6 +72,8 @@ vim.keymap.set('n', '<leader>ohh', ':e ~/nixos/user/home.nix<CR>`.zz')
 vim.keymap.set('n', '<leader>op', ':e ~/nixos/user/packages.nix<CR>`.zz')
 vim.keymap.set('n', '<leader>on', ':e ~/nixos/configuration.nix<CR>`.zz')
 vim.keymap.set('n', '<leader>om', ':e ~/nixos/modules/<CR>')
+vim.keymap.set('n', '<leader>oomt', ":e ~/dotfiles/home/dot-kmonad/thinkpad.kbd<CR>")
+vim.keymap.set('n', '<leader>oomh', ":e ~/dotfiles/home/dot-kmonad/hyper.kbd<CR>")
 vim.keymap.set('n', '<leader>oho', ':e ~/nixos/hosts<CR>')
 
 vim.keymap.set('n', '<leader>ll', ':Lazy<CR>')
@@ -115,6 +117,7 @@ vim.keymap.set('v', '<leader>p', function()
 end, { desc = 'Yank to clipboard and keep the selection' })
 
 vim.keymap.set('n', '<leader>nh', ":noh<CR>")
+
 
 vim.keymap.set('v', '<leader>y', function()
 	vim.cmd('normal! "+y')

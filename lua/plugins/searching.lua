@@ -25,7 +25,7 @@ return {
 				"<leader>fr",
 				function()
 					require('telescope.builtin').oldfiles({
-						disable_devicons = true,
+						disable_devicons = false,
 					})
 				end,
 				desc = "Open last files"
